@@ -4,29 +4,26 @@
 
 #include <thread>
 #include <chrono>
+#include <memory>
+#include <utility>
+
+#include "game.hpp"
+
+uint64_t game::gold_counter = 0;
 
 int main()
 {
+	std::unique_ptr<game> g = std::make_unique<game>();
 	nana::form fm;
 	fm.caption("clicker");
 	nana::label lbl(fm, nana::rectangle(20, 60, 150, 30));
 	nana::button btn(fm, nana::rectangle(20, 20, 150, 30));
 	btn.caption("Click me!");
-	static int mat = 0;
 	btn.events().click([&]
 		{
-			lbl.caption(std::to_string(mat++));
+			lbl.caption(g->click());
 		});
-
-	// Idle generation every second
-	std::thread idleThread([&]() {
-		while (true) {
-			std::this_thread::sleep_for(std::chrono::seconds(1));
-			lbl.caption(std::to_string(mat++));
-		}
-		});
-	idleThread.detach(); // Let the thread run in the background
-
+	//g->update_resources();
 	fm.show();
 	nana::exec(
 #ifdef NANA_AUTOMATIC_GUI_TESTING

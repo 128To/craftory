@@ -133,6 +133,8 @@
   <ItemGroup>
     <ClInclude Include="ckact.hpp" />
     <ClInclude Include="game.hpp" />
+    <ClInclude Include="modifiers.hpp" />
+    <ClInclude Include="resource.hpp" />
     <ClInclude Include="resource_manager.hpp" />
   </ItemGroup>
   <ItemGroup>
