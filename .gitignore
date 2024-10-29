@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+/.vs/clicker
+/clicker/x64/Debug
+/x64/Debug
