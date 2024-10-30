@@ -1,3 +1,4 @@
+//#define NANA_AUTOMATIC_GUI_TESTING // testing purpose
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/button.hpp>
 #include <nana/gui/widgets/label.hpp>
@@ -11,6 +12,7 @@
 
 uint64_t game::gold_counter = 0;
 uint64_t game::gps_upgrade_cost = 10;
+uint64_t game::click_value_upgrade_cost = 20;
 
 int main() {
     std::unique_ptr<game> g = std::make_unique<game>();
