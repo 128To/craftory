@@ -13,13 +13,12 @@
 class game {
 public:
 	static uint64_t gold_counter;
+	static uint64_t gps_upgrade_cost;
 	uint32_t click_value;
+	uint64_t gold_per_second;
 	resource_manager m_resources;
 public:
-	game() : click_value(1) {}
-	game(const uint32_t& click_value) : click_value(click_value) {}
-	game(const resource_manager& resources) : m_resources(resources), click_value(1) {}
-	game(const uint32_t& click_value, const resource_manager& resources) : click_value(click_value), m_resources(resources) {}
+	game() : click_value(1), gold_per_second(0) {}
 
 	std::string click() {
 		gold_counter += click_value;
@@ -42,6 +41,4 @@ public:
 			});
 		idleThread.detach();
 	}
-
-
 };

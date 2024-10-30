@@ -7,27 +7,18 @@
 #include <memory>
 #include <utility>
 
-#include "game.hpp"
+#include "gameui.hpp"
 
 uint64_t game::gold_counter = 0;
+uint64_t game::gps_upgrade_cost = 10;
 
-int main()
-{
-	std::unique_ptr<game> g = std::make_unique<game>();
-	nana::form fm;
-	fm.caption("clicker");
-	nana::label lbl(fm, nana::rectangle(20, 60, 150, 30));
-	nana::button btn(fm, nana::rectangle(20, 20, 150, 30));
-	btn.caption("Click me!");
-	btn.events().click([&]
-		{
-			lbl.caption(g->click());
-		});
-	//g->update_resources();
-	fm.show();
-	nana::exec(
+int main() {
+    std::unique_ptr<game> g = std::make_unique<game>();
+    GameUI gameUI(std::move(g));
+
+    nana::exec(
 #ifdef NANA_AUTOMATIC_GUI_TESTING
-		2, 1, [&btn]() { click(btn); }
+        2, 1, [&]() { gameUI.clickButton_->events().emit(nana::arg_click, gameUI.fm_); }
 #endif
-	);
+    );
 }
