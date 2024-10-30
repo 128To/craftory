@@ -33,3 +33,5 @@
 /.vs/clicker
 /clicker/x64/Debug
 /x64/Debug
+/clicker/x64/Release
+/x64/Release
