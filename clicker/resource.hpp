@@ -7,25 +7,22 @@
 #include <string>
 #include <vector>
 
-#include "modifiers.hpp"
+#include "building.hpp"
 
-enum e_resource_type {
-	WOOD = 0,
-	STONE = 1,
-	COAL = 2,
-	// Automatic number allocation for the count done by the compiler
-	COUNT // Always last to keep track of the number of resources
+class i_resource {
+	virtual uint64_t get_generation_rate() const = 0;
+	virtual uint64_t get_amount() const = 0;
 };
 
-class resource {
+template<e_resource_type T_>
+class resource : public i_resource {
 public:
-	e_resource_type resource_type;
+	const e_resource_type resource_type;
+private:
 	uint64_t generation_rate;
 	uint64_t amount;
-	std::vector<modifier> modifiers;
 public:
-	resource(const e_resource_type& resource_type, const uint64_t& generation_rate, const uint64_t& initial_amount)
-		: resource_type(resource_type), generation_rate(generation_rate), amount(initial_amount) {}
-	resource(const e_resource_type& resource_type, const uint64_t& generation_rate)
-		: resource(resource_type, generation_rate, 0) {}
+	resource() : resource_type(T_), generation_rate(0), amount(0) {}
+	uint64_t get_generation_rate() const override { return generation_rate; }
+	uint64_t get_amount() const override { return amount; }
 };

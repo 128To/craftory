@@ -140,6 +140,7 @@
     <ClInclude Include="modifiers.hpp" />
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="resource_manager.hpp" />
+    <ClInclude Include="resource_type.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

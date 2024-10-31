@@ -3,49 +3,39 @@
 #include <cmath>
 #include <cstdint>
 
-#include "resource.hpp"
+#include "resource_type.hpp"
 
 #define BASE_BUILDING_PRODUCTION 1
 #define BASE_BUILDING_COST 100000
 
-uint32_t BASE_BUILDING_COST_(uint32_t tier_era) {
-	return BASE_BUILDING_COST * std::pow(2, tier_era);
+uint64_t BASE_BUILDING_COST_(uint32_t tier_era) {
+	return BASE_BUILDING_COST * static_cast<uint64_t>(std::round(std::pow(2, tier_era)));
 }
 
-// Singleton implementation with static count instead of singling object to avoid high memory usage
-// TODO: Singleton
-class wood_factory {
-private:
-	static uint16_t wood_factory_count;
-	const uint8_t wood_factory_base_production;
-	const uint32_t wood_factory_base_cost;
+class i_base_factory {
 public:
-	uint64_t wood_factory_cost;
-	uint64_t wood_factory_production;
-
-public: 
-	wood_factory() : wood_factory_base_production(1), wood_factory_base_cost(BASE_BUILDING_COST_(static_cast<uint32_t>(e_resource_type::WOOD))) {
-		wood_factory_count++;
-		wood_factory_cost = wood_factory_base_cost;
-		wood_factory_production = wood_factory_base_production;
-	}
-
-	~wood_factory() {
-		wood_factory_count--;
-	}
-
-	static uint16_t get_wood_factory_count() {
-		return wood_factory_count;
-	}
+	virtual ~i_base_factory() = default;
+	virtual uint16_t get_factory_count() const = 0;
 };
 
-template<typename resource_type>
-class base_factory {
+// Singleton implementation with static count instead of singling object to avoid high memory usage
+template<enum e_resource_type T_>
+class base_factory : public i_base_factory {
+	// Each factory represents a different resource type that can be produced, you can have multiple factories of the same type but the cost and production will be different
+	// The incrementation of the factory count is done in the constructor because when instantiating a factory, the factory is built. But if the factory is destroyed, the count is not decremented
+	// Because as each instance of the factory represents a unique resource type, the count isn't static. If factory count = 0, then there are no factories of that type.
+private:
 	uint16_t factory_count;
-	const uint8_t wood_factory_base_production;
-	const uint32_t wood_factory_base_cost;
+	const uint8_t base_factory_production;
+	const uint64_t base_factory_cost;
 public:
-	uint64_t wood_factory_cost;
-	uint64_t wood_factory_production;
-
+	uint64_t factory_cost;
+	uint64_t factory_production;
+public:
+	base_factory() : base_factory_production(BASE_BUILDING_PRODUCTION), base_factory_cost(BASE_BUILDING_COST_(static_cast<uint32_t>(T_))) {
+		factory_count++;
+		factory_cost = base_factory_cost;
+		factory_production = base_factory_production;
+	}
+	uint16_t get_factory_count() const override { return factory_count; }
 };

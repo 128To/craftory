@@ -7,7 +7,7 @@
 #include <string>
 
 #include "resource_manager.hpp"
-#include "building.hpp"
+#include "building_manager.hpp"
 
 #define IDLE_TICK_RATE 1 // Generation rate is in seconds
 
@@ -19,6 +19,7 @@ public:
 	uint32_t click_value;
 	uint64_t gold_per_second;
 	resource_manager m_resources;
+	factory_manager m_factories;
 public:
 	game() : click_value(1), gold_per_second(0) {}
 
@@ -46,23 +47,6 @@ public:
 			}
 			});
 		idle_thread.detach();
-	}
-
-	void update_resources() {
-		std::thread idleThread([&]() {
-			while (true) {
-				std::this_thread::sleep_for(std::chrono::seconds(IDLE_TICK_RATE));
-				std::for_each(m_resources.resources.begin(), m_resources.resources.end(), [&](resource& res) {
-					res.amount += res.generation_rate;
-					std::for_each(res.modifiers.begin(), res.modifiers.end(), [&](modifier& mod) {
-						res.amount *= mod.multiplier;
-						res.amount += mod.additive;
-						});
-					}
-				);
-			}
-			});
-		idleThread.detach();
 	}
 private:
 	bool can_buy_upgrade(uint64_t upgrade_cost) {

@@ -19,7 +19,7 @@ public:
         fm_.caption("Clicker");
 
         nana::place layout(fm_);
-        layout.div("<vert margin=10 gap=10 <weight=30><weight=20% labels> <weight=40% buttons> <weight=30% upgrades>");
+		layout.div("<vert margin=10 gap=10 labels><vert margin=10 gap=10 buttons><vert margin=10 gap=10 upgrades><vert margin=10 gap=10 building>");
 
         gold_label_ = std::make_unique<nana::label>(fm_);
         gps_label_ = std::make_unique<nana::label>(fm_);
@@ -48,12 +48,14 @@ public:
         layout["upgrades"] << *click_value_upgrade_label_;
 
         // --- Building section ---
-        wood_factory_button_ = std::make_unique<nana::button>(fm_);
-        wood_factory_button_->caption("Buy a wood_factory");
-        layout["building"] << *wood_factory_button_;
+		building_button_ = std::make_unique<nana::button>(fm_);
+		building_button_->caption("Build Factory");
+		layout["building"] << *building_button_;
 
-        wood_factory_label_ = std::make_unique<nana::label>(fm_);
-        layout["building"] << *wood_factory_label_;
+		building_label_ = std::make_unique<nana::label>(fm_);
+		building_cost_label_ = std::make_unique<nana::label>(fm_);
+		layout["building"] << *building_label_;
+		layout["building"] << *building_cost_label_;     
 
         layout.collocate();
 
@@ -76,7 +78,8 @@ private:
     }
 
     void update_resources_labels() {
-        wood_factory_label_->caption(std::to_string(game_->wood_factory) + "")
+		building_label_->caption("Wood Factory: " + std::to_string(game_->m_factories.get_factory<e_resource_type::WOOD>().get_factory_count()));
+		building_cost_label_->caption("Cost: " + std::to_string(game_->m_factories.get_factory<e_resource_type::WOOD>().factory_cost));
     }
 
     template <typename func>
@@ -113,6 +116,7 @@ private:
     std::unique_ptr<nana::label> click_value_upgrade_label_;
 
     // --- Building Section ---
-    std::unique_ptr <nana::button> wood_factory_button_;
-    std::unique_ptr<nana::label> wood_factory_label_;
+	std::unique_ptr<nana::label> building_label_;
+	std::unique_ptr<nana::button> building_button_;
+	std::unique_ptr<nana::label> building_cost_label_;
 };

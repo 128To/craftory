@@ -16,9 +16,6 @@ uint64_t game::gold_counter = 0;
 uint64_t game::gps_upgrade_cost = 10;
 uint64_t game::click_value_upgrade_cost = 20;
 
-// static definition of initial product
-uint16_t wood_factory::wood_factory_count = 0;
-
 
 int main() {
     std::unique_ptr<game> g = std::make_unique<game>();

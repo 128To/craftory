@@ -7,14 +7,23 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "resource.hpp"
 
 class resource_manager {
 public:
-	std::vector<resource> resources;
-public:
-	resource_manager() {}
-	resource_manager(const std::vector<resource>& resources) : resources(resources) {}
-	resource_manager(const std::initializer_list<resource>& resources) : resources(resources) {}
+	static resource_manager& get_instance() {
+		static resource_manager instance;
+		return instance;
+	}
+
+	template<enum e_resource_type T_>
+	resource<T_> get_resource() {
+		if (!m_resources[T_])
+			m_resources[T_] = std::make_unique<resource<T_>>();
+		return *safe_cast<resource<T_>*>(m_resources[T_].get());
+	}
+private:
+	std::unordered_map<enum e_resource_type, std::vector<i_resource> > m_resources;
 };
