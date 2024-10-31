@@ -53,5 +53,11 @@
     <None Include="IDEA.md" />
     <None Include="TODO.md" />
     <None Include=".gitignore" />
+    <None Include="..\IDEA.md" />
+    <None Include="..\README.md" />
+    <None Include="..\TODO.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\LICENSE.txt" />
   </ItemGroup>
 </Project>
