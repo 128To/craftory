@@ -1,12 +1,3 @@
-strategy:
-  matrix:
-    include:
-      # Analyze C and C++ code
-      - language: c-cpp
-        build-mode: autobuild
-      # Analyze Go code
-      - language: go
-        build-mode: autobuild
 on:
   push:
     branches: [ "master" ]
