@@ -22,9 +22,6 @@ jobs:
       - name: Install Nana using vcpkg
         run: .\vcpkg\vcpkg install nana
 
-      - name: Integrate vcpkg
-        run: .\vcpkg integrate install
-
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
