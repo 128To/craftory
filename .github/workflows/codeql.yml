@@ -9,20 +9,19 @@ on:
 
 jobs:
   analyze:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: cpp
-          # Disable autobuild by setting this to an empty string
           build-mode: ""
 
       - name: Build the project
-        run: msbuild clicker.sln /p:Configuration=Release
+        run: msbuild path/to/your/project.sln /p:Configuration=Release
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
