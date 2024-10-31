@@ -1,11 +1,20 @@
-name: "CodeQL Analysis"
-
+strategy:
+  matrix:
+    include:
+      # Analyze C and C++ code
+      - language: c-cpp
+        build-mode: autobuild
+      # Analyze Go code
+      - language: go
+        build-mode: autobuild
 on:
   push:
     branches: [ "master" ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "master" ]
+# Initializes the CodeQL tools for scanning.
+name: Analyze
 
 jobs:
   analyze:
@@ -20,8 +29,8 @@ jobs:
           languages: cpp
           build-mode: ""
 
-      - name: Build the project
-        run: msbuild clicker.sln /p:Configuration=Release
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
