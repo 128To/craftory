@@ -13,7 +13,7 @@
 
 #include "game.hpp"
 
-class GameUI {
+class GameUI { 
 public:
     GameUI(std::unique_ptr<game> game) : game_(std::move(game)), fm_(nana::API::make_center(500, 200)) {
         fm_.caption("Clicker");
