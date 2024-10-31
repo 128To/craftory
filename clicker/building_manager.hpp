@@ -23,12 +23,9 @@ public:
 	}
 private:
 	std::unordered_map<enum e_resource_type, std::unique_ptr<i_base_factory>> m_factories;
-	
-	std::string get_type_name(e_resource_type type) const noexcept {
-		switch (type) {
-		case e_resource_type::WOOD: return "Wood Factory";
-		case e_resource_type::STONE: return "Stone Factory";
-		default: return "Unknown";
-		}
+
+	std::string get_type_name(e_resource_type type) {
+		auto it = resource_type_names.find(type);
+		return (it != resource_type_names.end()) ? it->second : "Unknown Factory";
 	}
 };
