@@ -132,6 +132,8 @@
     <ClCompile Include="clicker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="building.hpp" />
+    <ClInclude Include="building_manager.hpp" />
     <ClInclude Include="ckact.hpp" />
     <ClInclude Include="game.hpp" />
     <ClInclude Include="gameui.hpp" />

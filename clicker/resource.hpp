@@ -1,5 +1,8 @@
 #pragma once
 
+// The resources are made to craft multiple tools, automations machines but can be sold for gold.
+// It can also be used, at a certain state of the minigame, for scientific research and for global export.
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -9,7 +12,9 @@
 enum e_resource_type {
 	WOOD = 0,
 	STONE = 1,
-	COUNT = 2 // Always last to keep track of the number of resources
+	COAL = 2,
+	// Automatic number allocation for the count done by the compiler
+	COUNT // Always last to keep track of the number of resources
 };
 
 class resource {

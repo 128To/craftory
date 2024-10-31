@@ -7,6 +7,7 @@
 #include <string>
 
 #include "resource_manager.hpp"
+#include "building.hpp"
 
 #define IDLE_TICK_RATE 1 // Generation rate is in seconds
 
