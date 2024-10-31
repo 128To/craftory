@@ -18,9 +18,9 @@ template<e_resource_type T_>
 class resource : public i_resource {
 public:
 	const e_resource_type resource_type;
+	uint64_t amount;
 private:
 	uint64_t generation_rate;
-	uint64_t amount;
 public:
 	resource() : resource_type(T_), generation_rate(0), amount(0) {}
 	uint64_t get_generation_rate() const override { return generation_rate; }

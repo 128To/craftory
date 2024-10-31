@@ -16,7 +16,7 @@ public:
 	}
 
 	template<enum e_resource_type T_>
-	base_factory<T_> get_factory() {
+	base_factory<T_>& get_factory() {
 		if (!m_factories.contains(T_))
 			m_factories[T_] = std::make_unique<base_factory<T_>>();
 		return *static_cast<base_factory<T_>*>(m_factories[T_].get());

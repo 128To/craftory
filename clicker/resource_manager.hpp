@@ -19,11 +19,11 @@ public:
 	}
 
 	template<enum e_resource_type T_>
-	resource<T_> get_resource() {
+	resource<T_>& get_resource() {
 		if (!m_resources[T_])
 			m_resources[T_] = std::make_unique<resource<T_>>();
-		return *safe_cast<resource<T_>*>(m_resources[T_].get());
+		return *static_cast<resource<T_>*>(m_resources[T_].get());
 	}
 private:
-	std::unordered_map<enum e_resource_type, std::vector<i_resource> > m_resources;
+	std::unordered_map<enum e_resource_type, std::unique_ptr<i_resource> > m_resources;
 };

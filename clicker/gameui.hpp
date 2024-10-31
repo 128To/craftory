@@ -15,11 +15,11 @@
 
 class GameUI {
 public:
-    GameUI(std::unique_ptr<game> game) : game_(std::move(game)), fm_() {
+    GameUI(std::unique_ptr<game> game) : game_(std::move(game)), fm_(nana::API::make_center(500, 200)) {
         fm_.caption("Clicker");
 
         nana::place layout(fm_);
-		layout.div("<vert margin=10 gap=10 labels><vert margin=10 gap=10 buttons><vert margin=10 gap=10 upgrades><vert margin=10 gap=10 building>");
+        layout.div("<vert margin=10 gap=10 labels><vert margin=10 gap=10 buttons><vert margin=10 gap=10 upgrades><vert margin=10 gap=10 building> <vert margin=10 gap=10 resources>");
 
         gold_label_ = std::make_unique<nana::label>(fm_);
         gps_label_ = std::make_unique<nana::label>(fm_);
@@ -57,14 +57,20 @@ public:
 		layout["building"] << *building_label_;
 		layout["building"] << *building_cost_label_;     
 
+		// --- Resources Section ---
+		resources_label_ = std::make_unique<nana::label>(fm_);
+		layout["resources"] << *resources_label_;
+
         layout.collocate();
 
         this->update_labels_thr();
         game_->update_gold_bgps();
+		game_->yield_factory_resources<e_resource_type::WOOD>();
 
         bind_click_event(*click_button_, [this]() { game_->gold_click(); });
         bind_click_event(*gps_upgrade_button_, [this]() { game_->gps_click(); });
         bind_click_event(*click_value_upgrade_button_, [this]() { game_->cv_click(); });
+		bind_click_event(*building_button_, [this]() { game_->build_factory<e_resource_type::WOOD>(); });
 
         fm_.show();
     }
@@ -80,6 +86,7 @@ private:
     void update_resources_labels() {
 		building_label_->caption("Wood Factory: " + std::to_string(game_->m_factories.get_factory<e_resource_type::WOOD>().get_factory_count()));
 		building_cost_label_->caption("Cost: " + std::to_string(game_->m_factories.get_factory<e_resource_type::WOOD>().factory_cost));
+		resources_label_->caption("Wood: " + std::to_string(game_->m_resources.get_resource<e_resource_type::WOOD>().get_amount()));
     }
 
     template <typename func>
@@ -87,6 +94,7 @@ private:
         button.events().click([this, action]() {
             action();
             update_labels();
+            update_resources_labels();
         });
     }
 
@@ -94,6 +102,7 @@ private:
         std::thread updateThread([this]() {
             while (true) {
                 update_labels();
+                update_resources_labels();
                 std::this_thread::sleep_for(std::chrono::milliseconds(IDLE_TICK_RATE));
             }
             });
@@ -119,4 +128,7 @@ private:
 	std::unique_ptr<nana::label> building_label_;
 	std::unique_ptr<nana::button> building_button_;
 	std::unique_ptr<nana::label> building_cost_label_;
+
+	// --- Resources Section ---
+	std::unique_ptr<nana::label> resources_label_;
 };
