@@ -21,7 +21,7 @@ jobs:
           build-mode: ""
 
       - name: Build the project
-        run: msbuild path/to/your/project.sln /p:Configuration=Release
+        run: msbuild clicker.sln /p:Configuration=Release
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
