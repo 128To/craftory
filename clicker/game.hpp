@@ -66,6 +66,12 @@ public:
 			});
 		idle_thread.detach();
 	}
+
+	template <enum e_resource_type _T, enum e_resource_type... Rest>
+	typename std::enable_if<sizeof...(Rest) != 0>::type yield_factory_resources() {
+		yield_factory_resources<_T>();
+		yield_factory_resources<Rest...>();
+	}
 private:
 	bool can_buy_upgrade(uint64_t upgrade_cost) {
 		return this->gold_counter >= upgrade_cost;

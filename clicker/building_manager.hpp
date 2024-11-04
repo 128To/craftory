@@ -5,6 +5,17 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
+#include <type_traits>
+
+#include "resource.hpp"
+
+#pragma once
+
+#include <vector>
+#include <memory>
+#include <unordered_map>
+#include <string>
+#include <type_traits>
 
 #include "resource.hpp"
 
@@ -21,23 +32,28 @@ public:
     }
 
     template<e_resource_type T_, e_resource_type... Rest>
-    typename std::enable_if<(sizeof...(Rest) > 0), base_factory<T_>&>::type
-        get_factory() {
-        std::vector<e_resource_type> types = { T_, Rest... };
-        for (const auto& type : types)
-            get_factory_impl<type>();
-        return *static_cast<base_factory<T_>*>(m_factories[types[0]].get());
-    }
+	typename std::enable_if<sizeof...(Rest) != 0, base_factory<T_, Rest...>&>::type get_factory() {
+		return get_factory_impl<T_, Rest...>();
+	}
 
 private:
-    template<e_resource_type T_>
-    base_factory<T_>& get_factory_impl() {
-        if (!m_factories.contains(T_))
-            m_factories[T_] = std::make_unique<base_factory<T_>>();
-        return *static_cast<base_factory<T_>*>(m_factories[T_].get());
+    template<e_resource_type... Resources>
+    base_factory<Resources...>& get_factory_impl() {
+        std::string key = get_key<Resources...>();
+
+        if (!m_factories.contains(key)) {
+            m_factories[key] = std::make_unique<base_factory<Resources...>>();
+        }
+
+        return *static_cast<base_factory<Resources...>*>(m_factories[key].get());
     }
 
-    std::unordered_map<e_resource_type, std::unique_ptr<i_base_factory>> m_factories;
+    template<e_resource_type... Resources>
+    std::string get_key() const {
+        return ((std::to_string(static_cast<int>(Resources)) + "_") + ...);
+    }
+
+    std::unordered_map<std::string, std::unique_ptr<i_base_factory>> m_factories;
 
     std::string get_type_name(e_resource_type type) {
         auto it = resource_type_names.find(type);
