@@ -141,15 +141,13 @@
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="resource_manager.hpp" />
     <ClInclude Include="resource_type.hpp" />
+    <ClInclude Include="techtree.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\IDEA.md" />
     <None Include="..\README.md" />
     <None Include="..\TODO.md" />
     <None Include=".gitignore" />
     <None Include="IDEA.md" />
-    <None Include="README.md" />
-    <None Include="TODO.md" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\LICENSE.txt" />

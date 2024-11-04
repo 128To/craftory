@@ -47,13 +47,13 @@
     <ClInclude Include="resource_type.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="techtree.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" />
     <None Include="IDEA.md" />
-    <None Include="TODO.md" />
     <None Include=".gitignore" />
-    <None Include="..\IDEA.md" />
     <None Include="..\README.md" />
     <None Include="..\TODO.md" />
   </ItemGroup>

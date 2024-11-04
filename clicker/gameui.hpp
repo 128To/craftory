@@ -84,9 +84,9 @@ private:
     }
 
     void update_resources_labels() {
-		building_label_->caption("Wood Factory: " + std::to_string(game_->m_factories.get_factory<e_resource_type::WOOD>().get_factory_count()));
+		building_label_->caption("Wood Factory: " + std::to_string(game_->m_factories.get_factory<e_resource_type::WOOD>().factory_count));
 		building_cost_label_->caption("Cost: " + std::to_string(game_->m_factories.get_factory<e_resource_type::WOOD>().factory_cost));
-		resources_label_->caption("Wood: " + std::to_string(game_->m_resources.get_resource<e_resource_type::WOOD>().get_amount()));
+		resources_label_->caption("Wood: " + std::to_string(game_->m_resources.get_resource<e_resource_type::WOOD>().amount));
     }
 
     template <typename func>
