@@ -1,0 +1,90 @@
+name: Auto Version and Release with PR Suffix
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'dev'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "v0.0.0")
+          echo "Latest tag: $TAG"
+          echo "::set-output name=tag::$TAG"
+
+      - name: Determine version increment type based on PR title
+        id: determine_version_type
+        run: |
+          # Extract PR title
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          echo "PR Title: $PR_TITLE"
+          
+          # Determine increment type based on suffix
+          if [[ "$PR_TITLE" == *"[fix]"* ]]; then
+            echo "::set-output name=increment_type::patch"
+          elif [[ "$PR_TITLE" == *"[feat]"* ]]; then
+            echo "::set-output name=increment_type::minor"
+          elif [[ "$PR_TITLE" == *"[maj]"* ]]; then
+            echo "::set-output name=increment_type::major"
+          else
+            echo "Error: PR title must include a suffix [fix], [feat], or [maj]."
+            exit 1
+          fi
+
+      - name: Calculate new version
+        id: new_version
+        run: |
+          IFS='.' read -r -a VERSION_PARTS <<< "${{ steps.get_latest_tag.outputs.tag#v }}"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=${VERSION_PARTS[2]}
+          
+          # Increment based on determined type
+          case "${{ steps.determine_version_type.outputs.increment_type }}" in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+          
+          NEW_TAG="v$MAJOR.$MINOR.$PATCH"
+          echo "New version: $NEW_TAG"
+          echo "::set-output name=new_tag::$NEW_TAG"
+
+      - name: Create Tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.new_version.outputs.new_tag }}" -m "Release ${{ steps.new_version.outputs.new_tag }}"
+          git push origin "${{ steps.new_version.outputs.new_tag }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.new_version.outputs.new_tag }}
+          release_name: "Release ${{ steps.new_version.outputs.new_tag }}"
+          body: "Release from PR #${{ github.event.pull_request.number }} merged from `dev` to `main`."
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
