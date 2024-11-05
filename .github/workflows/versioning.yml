@@ -1,4 +1,4 @@
-name: Auto Version and Release with PR Suffix
+name: Versioning
 
 on:
   pull_request:
