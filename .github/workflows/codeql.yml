@@ -16,12 +16,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Cache
+        uses: actions/cache@v4.1.2
+        with:
+          path: |
+            vcpkg
+            vcpkg_installed
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
+          enableCrossOsArchive: true
+          fail-on-cache-miss: false
+          save-always: true
+          
+
       - name: Set up vcpkg
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
           .\vcpkg\vcpkg integrate install  # Integrate vcpkg with MSBuild
-
+          
       - name: Install Nana using vcpkg
         run: .\vcpkg\vcpkg install nana
 
@@ -29,7 +43,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: cpp
-          build-mode: "manual"  # Switch to manual build mode
+          build-mode: "manual"  # Switch to manual build mode    
 
       - name: Build the project with MSBuild
         shell: pwsh
@@ -38,7 +52,7 @@ jobs:
           if (-not (Test-Path $msbuild)) {
             $msbuild = "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
           }
-          & $msbuild D:\a\craftory\clicker\clicker.sln /p:Configuration=Release /p:Platform=x64
+          & $msbuild D:\a\craftory\craftory\clicker.sln /p:Configuration=Release /p:Platform=x64
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
