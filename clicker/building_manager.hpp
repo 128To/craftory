@@ -1,17 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <utility>
-#include <memory>
-#include <unordered_map>
-#include <string>
-#include <type_traits>
-
-#include "resource.hpp"
-
-#pragma once
-
-#include <vector>
 #include <memory>
 #include <unordered_map>
 #include <string>
