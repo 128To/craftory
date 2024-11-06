@@ -65,12 +65,12 @@ public:
 
         this->update_labels_thr();
         game_->update_gold_bgps();
-		game_->yield_factory_resources<e_resource_type::WOOD>();
+		game_->yield_factory_resources<e_resource_type::WOOD, e_resource_type::STONE>();
 
         bind_click_event(*click_button_, [this]() { game_->gold_click(); });
         bind_click_event(*gps_upgrade_button_, [this]() { game_->gps_click(); });
         bind_click_event(*click_value_upgrade_button_, [this]() { game_->cv_click(); });
-		bind_click_event(*building_button_, [this]() { game_->build_factory<e_resource_type::WOOD>(); });
+		bind_click_event(*building_button_, [this]() { game_->build_factory<e_resource_type::WOOD, e_resource_type::STONE>(); });
 
         fm_.show();
     }
@@ -84,8 +84,8 @@ private:
     }
 
     void update_resources_labels() {
-		building_label_->caption("Wood Factory: " + std::to_string(game_->m_factories.get_factory<e_resource_type::STONE, e_resource_type::WOOD>().factory_count));
-		building_cost_label_->caption("Cost: " + std::to_string(game_->m_factories.get_factory<e_resource_type::STONE, e_resource_type::WOOD>().factory_cost));
+		building_label_->caption("Wood Factory: " + std::to_string(game_->m_factories.get_factory<e_resource_type::WOOD, e_resource_type::STONE>().factory_count));
+		building_cost_label_->caption("Cost: " + std::to_string(game_->m_factories.get_factory<e_resource_type::WOOD, e_resource_type::STONE>().factory_cost));
 		resources_label_->caption(  "Wood: " + std::to_string(game_->m_resources.get_resource<e_resource_type::WOOD>().amount) + "\n"
                                     "Stone:" + std::to_string(game_->m_resources.get_resource<e_resource_type::STONE>().amount));
 
