@@ -10,6 +10,7 @@
 #include "building_manager.hpp"
 
 #define IDLE_TICK_RATE 1
+#define BASE_UPGRADE_COST_INC 1.15
 
 class game {
 public:
@@ -27,13 +28,15 @@ public:
 	void gps_click() { 
 		if (!this->can_buy_upgrade(gps_upgrade_cost))
 			return;
-		this->gold_counter -= gps_upgrade_cost;
+		this->gold_counter -= gps_upgrade_cost; 
+		gps_upgrade_cost = static_cast<uint64_t>(gps_upgrade_cost * BASE_UPGRADE_COST_INC);
 		this->gold_per_second++;
 	}
 	void cv_click() {
 		if (!this->can_buy_upgrade(click_value_upgrade_cost))
 			return;
 		this->gold_counter -= click_value_upgrade_cost;
+		click_value_upgrade_cost = static_cast<uint64_t>(click_value_upgrade_cost * BASE_UPGRADE_COST_INC);
 		this->click_value++;
 	}
 
@@ -42,6 +45,7 @@ public:
 		if (!this->can_buy_upgrade(m_factories.get_factory< _T, Rest...>().factory_cost))
 			return;
 		this->gold_counter -= m_factories.get_factory<_T, Rest...>().factory_cost;
+		this->m_factories.get_factory<_T, Rest...>().factory_cost = static_cast<uint64_t>(m_factories.get_factory<_T, Rest...>().factory_cost * BASE_UPGRADE_COST_INC);
 		m_factories.get_factory<_T, Rest...>().update_factory_count();
 	}
 

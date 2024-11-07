@@ -31,7 +31,7 @@ std::unordered_map<e_technology_type, std::string> technology_type_names = {
 struct technology_cost {
 	e_technology_type type;
 	uint64_t gold_cost;
-	std::unordered_map<e_resource_type, uint64_t> resource_costs;
+	std::unordered_map<e_resource_type, uint64_t> resource_costs; //This is be accessed a lot, so it's better to use a map for contigous memory O(1) access
 };
 
 struct unlocked_resources {
@@ -39,16 +39,16 @@ struct unlocked_resources {
 	std::vector<e_resource_type> resources;
 };
 
-struct unlocked_resources {
+struct unlocked_technologies {
 	e_technology_type type;
 	std::vector<e_technology_type> technologies;
 };
 
 // Technology cost in gold and resources
 std::array<technology_cost, e_technology_type::COUNT> technology_data = { {
-	{e_technology_type::SAWMILL, 100, {{e_resource_type::WOOD, 50}}},
-	{e_technology_type::CARRIER, 150, {{e_resource_type::WOOD, 75}}},
-	{e_technology_type::BASIC_MINE, 200, {{e_resource_type::STONE, 100}}},
+	{e_technology_type::SAWMILL, 100, {}},
+	{e_technology_type::CARRIER, 1500, {{e_resource_type::WOOD, 75}}},
+	{e_technology_type::BASIC_MINE, 12000, {{e_resource_type::STONE, 100}}},
 
 	{e_technology_type::ADVANCED_MINE, 300, {{e_resource_type::STONE, 150}}},
 	{e_technology_type::REFINEMENT, 400, {{e_resource_type::COAL, 200}}},
@@ -66,15 +66,18 @@ std::array<unlocked_resources, e_technology_type::COUNT> unlocked_resources_data
 	{e_technology_type::OIL_DRILL, {e_resource_type::OIL}}
 } };
 
+// Technologies that has to be unlocked to unlock the technology
 std::array<unlocked_technologies, e_technology_type::COUNT> unlocked_technologies_data = { {
-	{e_technology_type::SAWMILL, {e_technology_type::CARRIER}},
-	{e_technology_type::CARRIER, {e_technology_type::BASIC_MINE}},
-	{e_technology_type::BASIC_MINE, {e_technology_type::ADVANCED_MINE}},
+	{e_technology_type::SAWMILL, {}},
+	{e_technology_type::CARRIER, {}},
+	{e_technology_type::BASIC_MINE, {e_technology_type::SAWMILL, e_technology_type::CARRIER}},
 
-	{e_technology_type::ADVANCED_MINE, {e_technology_type::REFINEMENT}},
-	{e_technology_type::REFINEMENT, {e_technology_type::OIL_DRILL}},
-	{e_technology_type::OIL_DRILL, {}}
+	{e_technology_type::ADVANCED_MINE, {e_technology_type::BASIC_MINE}},
+	{e_technology_type::REFINEMENT, {}},
+	{e_technology_type::OIL_DRILL, {e_technology_type::REFINEMENT}}
 } };
+
+
 
 inline const std::string& get_technology_name(e_technology_type tech) {
 	return technology_type_names[technology_data[tech].type];

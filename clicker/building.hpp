@@ -26,7 +26,7 @@ template <enum e_resource_type _T, e_resource_type... Resources>
 class base_factory : public i_base_factory {
 public:
     const uint8_t factory_production;       // Production rate shared by all resources of the same factory
-    const uint64_t factory_cost;            // Cost shared by all resources of the same factory
+    uint64_t factory_cost;            // Cost shared by all resources of the same factory
     uint16_t factory_count;
 
 public:
@@ -38,6 +38,6 @@ public:
     void update_factory_count() override { ++factory_count; }
 
     uint16_t get_factory_count() override { return factory_count; }
-    uint8_t get_production_rate() const { return factory_production * factory_count; }
-    uint64_t get_cost() const { return factory_cost; }
+    uint8_t get_production_rate() const noexcept { return factory_production * factory_count; }
+    uint64_t get_cost() const noexcept { return factory_cost; }
 };
