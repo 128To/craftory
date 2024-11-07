@@ -5,8 +5,7 @@
 #include <chrono>
 #include <thread>
 
-#include "resource_manager.hpp"
-#include "building_manager.hpp"
+#include "technology.hpp"
 
 class game;
 

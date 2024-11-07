@@ -3,10 +3,15 @@
 #include <unordered_map>
 
 enum e_resource_type {
-	WOOD = 0,
-	STONE = 1,
-	COAL = 2,
+	WOOD,
+	STONE,
+	COAL,
 
+	IRON,
+	BAUXITE,
+	COPPER,
+	SILICA,
+	OIL,
 	// Automatic number allocation for the count done by the compiler
 	COUNT // Always last to keep track of the number of resources
 };
