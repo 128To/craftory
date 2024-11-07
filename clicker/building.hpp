@@ -22,7 +22,7 @@ public:
     virtual uint16_t get_factory_count() = 0;
 };
 
-template <e_resource_type... Resources>
+template <enum e_resource_type _T, e_resource_type... Resources>
 class base_factory : public i_base_factory {
 public:
     const uint8_t factory_production;       // Production rate shared by all resources of the same factory
@@ -32,7 +32,7 @@ public:
 public:
     base_factory()
         : factory_production(BASE_BUILDING_PRODUCTION),
-          factory_cost(BASE_BUILDING_COST_(std::min({ static_cast<uint32_t>(Resources)... }))), // Use sizeof... to get the number of resources
+		factory_cost(BASE_BUILDING_COST_(static_cast<uint32_t>(_T))),
           factory_count(BASE_BUILDING_COUNT) {}
 
     void update_factory_count() override { ++factory_count; }
@@ -40,10 +40,4 @@ public:
     uint16_t get_factory_count() override { return factory_count; }
     uint8_t get_production_rate() const { return factory_production * factory_count; }
     uint64_t get_cost() const { return factory_cost; }
-
-    std::unordered_map<e_resource_type, uint64_t> produce() const {
-        std::unordered_map<e_resource_type, uint64_t> produced_resources;
-        (produced_resources.emplace(Resources, factory_production * factory_count), ...);
-        return produced_resources;
-    }
 };

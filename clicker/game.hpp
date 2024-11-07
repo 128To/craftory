@@ -37,13 +37,14 @@ public:
 		this->click_value++;
 	}
 
-	template<enum e_resource_type _T>
+	template<enum e_resource_type _T, enum e_resource_type... Rest>
 	void build_factory() {
-		if (!this->can_buy_upgrade(m_factories.get_factory< _T>().factory_cost))
+		if (!this->can_buy_upgrade(m_factories.get_factory< _T, Rest...>().factory_cost))
 			return;
-		this->gold_counter -= m_factories.get_factory<_T>().factory_cost;
-		m_factories.get_factory<_T>().update_factory_count();
+		this->gold_counter -= m_factories.get_factory<_T, Rest...>().factory_cost;
+		m_factories.get_factory<_T, Rest...>().update_factory_count();
 	}
+
 	void update_gold_bgps() {
 		std::thread idle_thread([&]() {
 			while (true) {
@@ -54,23 +55,22 @@ public:
 		idle_thread.detach();
 	}
 
-	template <enum e_resource_type _T>
+	template <enum e_resource_type _T, enum e_resource_type... Rest>
 	void yield_factory_resources() {
 		std::thread idle_thread([&]() {
 			while (true) {
 				std::this_thread::sleep_for(std::chrono::seconds(IDLE_TICK_RATE));
 				this->m_resources.get_resource<_T>().amount +=
-					this->m_factories.get_factory<_T>().get_factory_count() * // How many factories of this type do we have?
-					this->m_factories.get_factory<_T>().factory_production;// How much does each factory produce?
+					this->m_factories.get_factory<_T, Rest...>().factory_count * 
+					this->m_factories.get_factory<_T, Rest...>().factory_production;  
+			
+				(void(std::initializer_list<int>{
+					(this->m_resources.get_resource<Rest>().amount +=
+						this->m_factories.get_factory<_T, Rest...>().factory_count*
+						this->m_factories.get_factory<_T, Rest...>().factory_production, 0)...}));
 			}
 			});
 		idle_thread.detach();
-	}
-
-	template <enum e_resource_type _T, enum e_resource_type... Rest>
-	typename std::enable_if<sizeof...(Rest) != 0>::type yield_factory_resources() {
-		yield_factory_resources<_T>();
-		yield_factory_resources<Rest...>();
 	}
 private:
 	bool can_buy_upgrade(uint64_t upgrade_cost) {
