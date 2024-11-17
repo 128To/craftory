@@ -7,5 +7,5 @@ public:
 	double multiplier;
 	double additive;
 
-	modifier(double multiplier, double additive) : multiplier(multiplier), additive(additive) {}
+	modifier(double& multiplier, double& additive) : multiplier(multiplier), additive(additive) {}
 };

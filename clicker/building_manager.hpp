@@ -44,7 +44,7 @@ private:
 
     std::unordered_map<std::string, std::unique_ptr<i_base_factory>> m_factories;
 
-    std::string get_type_name(e_resource_type type) {
+    std::string get_type_name(e_resource_type& type) {
         auto it = resource_type_names.find(type);
         return (it != resource_type_names.end()) ? it->second : "Unknown Factory";
     }

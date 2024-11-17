@@ -143,6 +143,7 @@
     <ClInclude Include="resource_manager.hpp" />
     <ClInclude Include="resource_type.hpp" />
     <ClInclude Include="technology.hpp" />
+    <ClInclude Include="technology_data_repository.hpp" />
     <ClInclude Include="techtree.hpp" />
   </ItemGroup>
   <ItemGroup>

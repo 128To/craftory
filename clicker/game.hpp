@@ -2,15 +2,17 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <ctype.h>
 #include <chrono>
 #include <thread>
 #include <string>
 
 #include "resource_manager.hpp"
 #include "building_manager.hpp"
+#include "techtree.hpp"
 
-#define IDLE_TICK_RATE 1
-#define BASE_UPGRADE_COST_INC 1.15
+constexpr uint8_t IDLE_TICK_RATE = 1;
+constexpr float_t BASE_UPGRADE_COST_INC = 1.15f;
 
 class game {
 public:
@@ -21,18 +23,19 @@ public:
 	uint64_t gold_per_second;
 	resource_manager m_resources;
 	factory_manager m_factories;
+	techtree m_techtree;
 public:
 	game() : click_value(1), gold_per_second(0) {}
 
-	void gold_click(void) { this->gold_counter += this->click_value; }
-	void gps_click() { 
+	inline void gold_click(void) noexcept { this->gold_counter += this->click_value; }
+	inline void gps_click() { 
 		if (!this->can_buy_upgrade(gps_upgrade_cost))
 			return;
 		this->gold_counter -= gps_upgrade_cost; 
 		gps_upgrade_cost = static_cast<uint64_t>(gps_upgrade_cost * BASE_UPGRADE_COST_INC);
 		this->gold_per_second++;
 	}
-	void cv_click() {
+	inline void cv_click() {
 		if (!this->can_buy_upgrade(click_value_upgrade_cost))
 			return;
 		this->gold_counter -= click_value_upgrade_cost;
@@ -41,7 +44,7 @@ public:
 	}
 
 	template<enum e_resource_type _T, enum e_resource_type... Rest>
-	void build_factory() {
+	inline void build_factory() {
 		if (!this->can_buy_upgrade(m_factories.get_factory< _T, Rest...>().factory_cost))
 			return;
 		this->gold_counter -= m_factories.get_factory<_T, Rest...>().factory_cost;
@@ -49,7 +52,7 @@ public:
 		m_factories.get_factory<_T, Rest...>().update_factory_count();
 	}
 
-	void update_gold_bgps() {
+	inline void update_gold_bgps() {
 		std::thread idle_thread([&]() {
 			while (true) {
 				std::this_thread::sleep_for(std::chrono::seconds(IDLE_TICK_RATE));
@@ -60,7 +63,7 @@ public:
 	}
 
 	template <enum e_resource_type _T, enum e_resource_type... Rest>
-	void yield_factory_resources() {
+	inline void yield_factory_resources() {
 		std::thread idle_thread([&]() {
 			while (true) {
 				std::this_thread::sleep_for(std::chrono::seconds(IDLE_TICK_RATE));
@@ -77,7 +80,37 @@ public:
 		idle_thread.detach();
 	}
 private:
-	bool can_buy_upgrade(uint64_t upgrade_cost) {
+	inline const bool can_buy_upgrade(uint64_t& upgrade_cost) const noexcept {
 		return this->gold_counter >= upgrade_cost;
+	}
+
+	// Game to Techtree interaction
+	//TODO : Separates this into a dedicated class
+	//TODO : Create interfaces for the dedicated class for better architecture
+	inline const bool can_be_resources_purshased(const e_technology_type& type_) const noexcept {
+		std::for_each(this->m_techtree.m_technologies.at(type_).get()->m_resources_cost.begin(),
+			this->m_techtree.m_technologies.at(type_).get()->m_resources_cost.end(),
+			[&](const auto& _r_cost) {
+				if(this->m_resources.m_resources.)
+			});
+	}
+
+	inline const bool can_be_purshased(const e_technology_type& type_, const uint64_t& current_game_gold_counter_) const noexcept {
+		bool cbp_gold = current_game_gold_counter_ >= this->m_techtree.m_technologies.at(type_).get()->m_gold_cost;
+		bool cbp_resources = can_be_resources_purshased(type_);
+		return cbp_gold && cbp_resources;
+	}
+
+	inline const bool dependencies_are_unlocked(const e_technology_type& type_) const noexcept {
+		std::for_each(	this->m_techtree.m_technologies.at(type_).get()->m_dependencies.begin(),
+						this->m_techtree.m_technologies.at(type_).get()->m_dependencies.end(), 
+			[&](const enum e_technology_type& _dep) {
+				if (!this->m_techtree.m_technologies.at(_dep).get()->is_unlocked) return false;
+			});
+		return true;
+	}
+
+	inline const bool can_be_unlocked(const e_technology_type& type_, const uint64_t& current_game_gold_counter_) const noexcept {
+		return dependencies_are_unlocked(type_) && can_be_purshased(type_, current_game_gold_counter_);
 	}
 };
