@@ -14,17 +14,14 @@
 
 class resource_manager {
 public:
-	static resource_manager& get_instance() {
-		static resource_manager instance;
-		return instance;
-	}
-
-	template<enum e_resource_type T_>
-	resource<T_>& get_resource() { //to add and get resources to fetch.
-		if (!m_resources[T_])
-			m_resources[T_] = std::make_unique<resource<T_>>();
-		return *static_cast<resource<T_>*>(m_resources[T_].get());
-	}
+    template<enum e_resource_type T_>
+    inline const resource<T_>& get_resource() noexcept {
+        auto it = m_resources.find(T_);
+        if (it == m_resources.end()) {
+            m_resources[T_] = std::make_unique<resource<T_>>();
+        }
+        return *static_cast<resource<T_>*>(m_resources.at(T_).get());
+    }
 
 	std::unordered_map<e_resource_type, std::unique_ptr<i_resource> > m_resources;
 };
