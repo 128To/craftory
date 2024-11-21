@@ -90,7 +90,7 @@ private:
 	inline const bool can_be_resources_purshased(const e_technology_type& type_) noexcept {
 		const auto& resource_costs = this->m_techtree.m_technologies.at(type_).get()->m_resources_cost;
 		for (const auto& [resource_type, cost] : resource_costs) {
-			if (this->m_resources.get_resource<resource_type>().get_amount() < cost) {
+			if (this->m_resources.m_resources.at(resource_type)->get_amount() < cost) {
 				return false;
 			}
 		}

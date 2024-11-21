@@ -10,6 +10,7 @@
 #include "building.hpp"
 
 class i_resource {
+public:
 	virtual uint64_t get_generation_rate() const = 0;
 	virtual uint64_t get_amount() const = 0;
 };

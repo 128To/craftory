@@ -1,25 +1,3 @@
-# Techtree
-
-- Add a techtree to the GUI (in the top right corner)
-- Add more type of buildings and resources unlockables and finish connections
-
-# Buildings
-
-- Add visual representation of buildings (Cookie clicker style)
-- Manage the memory pool of visuals buildings (e.g. 1 visual building for 10 buildings when exceeding a number of building)
-- Add a way to unlock building (Implementation but should be in the GUI)
-
-# Resources
-
-- Move the resources to the top of the screen (Civilization style)
-
-# Energy
-
-- Add an energy resource
-- Add an energy building (Wind turbine, solar panel, etc.)
-- Add a way to convert energy to other resources (e.g. energy to gold)
-- Add a way to convert other resources to energy (e.g. wood to energy) if the building made for this is built
-
 # Save
 
 - Add a save button to save the game state (refeer to a user id)
