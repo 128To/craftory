@@ -16,18 +16,18 @@ public:
     }
 
     template<e_resource_type T_>
-    base_factory<T_>& get_factory() {
+    inline base_factory<T_>& get_factory() noexcept {
         return get_factory_impl<T_>();
     }
 
     template<e_resource_type T_, e_resource_type... Rest>
-	typename std::enable_if<sizeof...(Rest) != 0, base_factory<T_, Rest...>&>::type get_factory() {
+	inline typename std::enable_if<sizeof...(Rest) != 0, base_factory<T_, Rest...>&>::type get_factory() noexcept {
 		return get_factory_impl<T_, Rest...>();
 	}
 
 private:
     template<e_resource_type... Resources>
-    base_factory<Resources...>& get_factory_impl() {
+    inline base_factory<Resources...>& get_factory_impl() {
         std::string key = get_key<Resources...>();
 
         if (!m_factories.contains(key)) {
@@ -38,13 +38,13 @@ private:
     }
 
     template<e_resource_type... Resources>
-    std::string get_key() const {
+    inline const std::string get_key() const noexcept {
         return ((std::to_string(static_cast<int>(Resources)) + "_") + ...);
     }
 
     std::unordered_map<std::string, std::unique_ptr<i_base_factory>> m_factories;
 
-    std::string get_type_name(e_resource_type type) {
+    inline const std::string get_type_name(e_resource_type& type) const noexcept {
         auto it = resource_type_names.find(type);
         return (it != resource_type_names.end()) ? it->second : "Unknown Factory";
     }

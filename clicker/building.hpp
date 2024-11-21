@@ -2,14 +2,14 @@
 
 #include <cmath>
 #include <cstdint>
-#include <unordered_map> // Added for unordered_map
-#include <initializer_list> // Added for initializer_list
+#include <unordered_map> 
+#include <initializer_list> 
 
 #include "resource_type.hpp"
 
-#define BASE_BUILDING_COUNT 0
-#define BASE_BUILDING_PRODUCTION 1
-#define BASE_BUILDING_COST 20
+constexpr uint8_t BASE_BUILDING_COUNT = 0;
+constexpr uint8_t BASE_BUILDING_PRODUCTION = 1;
+constexpr uint8_t BASE_BUILDING_COST = 20;
 
 uint64_t BASE_BUILDING_COST_(uint32_t tier_era) {
     return BASE_BUILDING_COST * static_cast<uint64_t>(std::round(std::pow(2, tier_era)));

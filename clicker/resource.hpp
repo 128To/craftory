@@ -10,6 +10,7 @@
 #include "building.hpp"
 
 class i_resource {
+public:
 	virtual uint64_t get_generation_rate() const = 0;
 	virtual uint64_t get_amount() const = 0;
 };
@@ -17,7 +18,7 @@ class i_resource {
 template<e_resource_type T_>
 class resource : public i_resource {
 public:
-	const e_resource_type resource_type;
+	e_resource_type resource_type;
 	uint64_t amount;
 private:
 	uint64_t generation_rate;

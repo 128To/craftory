@@ -9,7 +9,7 @@
 class craftory_gui : public nana::form
 {
 public:
-    craftory_gui(nana::window parent, const ::nana::size& sz = { 1280, 720 }, const nana::appearance& apr = { true, true, false, false, false, false, false })
+    craftory_gui(nana::window& parent, const ::nana::size& sz = { 1280, 720 }, const nana::appearance& apr = { true, true, false, false, false, false, false })
         : nana::form(parent, sz, apr)
     {
         init_();

@@ -23,8 +23,8 @@ public:
             gui_ = std::make_unique<craftory_gui>(wd);
             gui_->init_();
         }
-        catch (const nana::place::error& e) {
-            std::cerr << "Caught nana::place::error: " << e.what() << std::endl;
+        catch (std::exception& e) {
+			std::cerr << e.what() << std::endl;
             // Avoid rebinding here, just recreate the gui
             gui_.reset(); // Clear the previous instance to avoid issues
             gui_ = std::make_unique<craftory_gui>(wd);
