@@ -15,7 +15,7 @@
 class resource_manager {
 public:
     template<enum e_resource_type T_>
-    inline const resource<T_>& get_resource() noexcept {
+    inline resource<T_>& get_resource() noexcept {
         auto it = m_resources.find(T_);
         if (it == m_resources.end()) {
             m_resources[T_] = std::make_unique<resource<T_>>();
