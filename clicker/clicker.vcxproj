@@ -145,6 +145,7 @@
     <ClInclude Include="technology.hpp" />
     <ClInclude Include="technology_data_repository.hpp" />
     <ClInclude Include="techtree.hpp" />
+    <ClInclude Include="techtree_popup.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

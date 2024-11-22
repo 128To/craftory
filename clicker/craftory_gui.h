@@ -6,11 +6,13 @@
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/button.hpp>
 
+#include "techtree_popup.hpp"
+
 class craftory_gui : public nana::form
 {
 public:
     craftory_gui(nana::window& parent, const ::nana::size& sz = { 1280, 720 }, const nana::appearance& apr = { true, true, false, false, false, false, false })
-        : nana::form(parent, sz, apr)
+		: nana::form(parent, sz, apr), parent_(&parent)
     {
         init_();
     }
@@ -29,7 +31,7 @@ public:
             place_.bind(*this);
         }
 
-        place_.div("margin=[5,5,5,5] <vert margin=[5,5,5,5] <weight=30 margin=[5,5,5,5] <gap=2 field7>><margin=[5,5,5,5] <margin=[5,5,5,5] <margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid22>><margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid211>>><margin=[5,5,5,5] <margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid2>><margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid21>>><vert margin=[5,5,5,5] <grid=[1,5] margin=[5,5,5,5] gap=10 grid1>>>>");
+        place_.div("margin=[5,5,5,5] <vert margin=[5,5,5,5] <weight=30 margin=[5,5,5,5] <gap=2 field7><weight=100 gap=2 field10>><margin=[5,5,5,5] <vert margin=[5,5,5,5] <grid=[1,5] margin=[5,5,5,5] gap=10 grid1>><margin=[5,5,5,5] <margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid2>><margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid21>>><margin=[5,5,5,5] <margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid22>><margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid211>>>>>");
         caption("Form");
         bgcolor(nana::color(230, 230, 230));
         
@@ -39,6 +41,16 @@ public:
         resource_label_->caption("Wood : 0 | Stone : 0 | etc...");
         resource_label_->format(true);
         resource_label_->text_align(static_cast<nana::align>(0), static_cast<nana::align_v>(1));
+
+        // techtree_button_
+        techtree_button_ = std::make_unique<nana::button>(*this);
+        place_["field10"] << *techtree_button_;
+        techtree_button_->caption("Techtree");
+        techtree_button_->events().click([this] {
+            auto tech_popup = std::make_unique<techtree_popup>(*parent_);
+            tech_popup->modality();
+            tech_popup->show();
+            });
 
         // gold_label_
         gold_label_ = std::make_unique<nana::label>(*this);
@@ -106,6 +118,7 @@ public:
     }
 
     nana::place place_;
+	std::unique_ptr<nana::button> techtree_button_;
     std::unique_ptr<nana::label> gold_label_;
     std::unique_ptr<nana::button> gold_click_button_;
     std::unique_ptr<nana::label> resource_label_;
@@ -117,6 +130,9 @@ public:
     std::unique_ptr<nana::button> build_building_button__;
     std::unique_ptr<nana::label> building_label_;
     std::unique_ptr<nana::label> building_label__;
+
+private:
+	nana::window* parent_;
 };
 
 #endif //CRAFTORY_GUI_H
