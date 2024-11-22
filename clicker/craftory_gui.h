@@ -29,28 +29,16 @@ public:
             place_.bind(*this);
         }
 
-        place_.div("margin=[5,5,5,5] "
-                    "<vert margin=[5,5,5,5] "
-                        "<grid=[1,5] margin=[5,5,5,5] gap=10 grid1>"
-                        "<margin=[5,5,5,5] "
-                            "<grid=[1,5] margin=[5,5,5,5] gap=2 grid3>"
-                        ">"
-                    ">"
-                    "<margin=[5,5,5,5] "
-                        "<margin=[5,5,5,5] "
-                            "<grid=[1,8] margin=[5,5,5,5] gap=2 grid2>"
-                        ">"
-                        "<grid=[1,8] margin=[5,5,5,5] gap=2 grid21>"
-                    ">"
-                    "<margin=[5,5,5,5] "
-                        "<margin=[5,5,5,5] "
-                            "<grid=[1,8] margin=[5,5,5,5] gap=2 grid22>"
-                        ">"
-                        "<grid=[1,8] margin=[5,5,5,5] gap=2 grid211>"
-                    ">"
-                    "<margin=[5,5,5,5] gap=2 field6>");
-		caption("Craftory");
+        place_.div("margin=[5,5,5,5] <vert margin=[5,5,5,5] <weight=30 margin=[5,5,5,5] <gap=2 field7>><margin=[5,5,5,5] <margin=[5,5,5,5] <margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid22>><margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid211>>><margin=[5,5,5,5] <margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid2>><margin=[5,5,5,5] <grid=[1,8] margin=[5,5,5,5] gap=2 grid21>>><vert margin=[5,5,5,5] <grid=[1,5] margin=[5,5,5,5] gap=10 grid1>>>>");
+        caption("Form");
         bgcolor(nana::color(230, 230, 230));
+        
+        // resource_label_
+        resource_label_ = std::make_unique<nana::label>(*this);
+        place_["field7"] << *resource_label_;
+        resource_label_->caption("Wood : 0 | Stone : 0 | etc...");
+        resource_label_->format(true);
+        resource_label_->text_align(static_cast<nana::align>(0), static_cast<nana::align_v>(1));
 
         // gold_label_
         gold_label_ = std::make_unique<nana::label>(*this);
@@ -65,18 +53,6 @@ public:
         gold_click_button_ = std::make_unique<nana::button>(*this);
         place_["grid1"] << *gold_click_button_;
         gold_click_button_->caption("Click me!");
-
-        // resource_label_
-        resource_label_ = std::make_unique<nana::label>(*this);
-        place_["grid3"] << *resource_label_;
-        resource_label_->caption("Wood : 0");
-        resource_label_->text_align(static_cast<nana::align>(1), static_cast<nana::align_v>(1));
-
-        // resource_label__
-        resource_label__ = std::make_unique<nana::label>(*this);
-        place_["grid3"] << *resource_label__;
-        resource_label__->caption("Stone : 0");
-        resource_label__->text_align(static_cast<nana::align>(1), static_cast<nana::align_v>(1));
 
         // click_value_upgrade_button_
         click_value_upgrade_button_ = std::make_unique<nana::button>(*this);
@@ -133,7 +109,6 @@ public:
     std::unique_ptr<nana::label> gold_label_;
     std::unique_ptr<nana::button> gold_click_button_;
     std::unique_ptr<nana::label> resource_label_;
-    std::unique_ptr<nana::label> resource_label__;
     std::unique_ptr<nana::button> click_value_upgrade_button_;
     std::unique_ptr<nana::button> gps_upgrade_button_;
     std::unique_ptr<nana::label> click_value_upgrade_cost_label_;
