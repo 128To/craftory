@@ -93,11 +93,6 @@ public:
         place_["grid22"] << *build_building_button_;
         build_building_button_->caption("Build Sawmill");
 
-        // build_building_button__
-        build_building_button__ = std::make_unique<nana::button>(*this);
-        place_["grid22"] << *build_building_button__;
-        build_building_button__->caption("Build Carrier");
-
         // building_label_
         building_label_ = std::make_unique<nana::label>(*this);
         place_["grid211"] << *building_label_;

@@ -25,7 +25,7 @@ public:
 	factory_manager m_factories;
 	techtree m_techtree;
 public:
-	game() : click_value(1), gold_per_second(0) {}
+	game() : click_value(1), gold_per_second(0), m_resources(), m_factories(), m_techtree() {}
 
 	inline void gold_click(void) noexcept { this->gold_counter += this->click_value; }
 	inline void gps_click() { 
@@ -80,24 +80,24 @@ public:
 		idle_thread.detach();
 	}
 private:
-	inline const bool can_buy_upgrade(uint64_t& upgrade_cost) noexcept {
+	inline const bool can_buy_upgrade(uint64_t& upgrade_cost) const noexcept {
 		return this->gold_counter >= upgrade_cost;
 	}
 
 	// Game to Techtree interaction
 	//TODO : Separates this into a dedicated class
 	//TODO : Create interfaces for the dedicated class for better architecture
-	inline const bool can_be_resources_purshased(const e_technology_type& type_) noexcept {
+	inline const bool can_be_resources_purshased(const e_technology_type& type_) const noexcept {
 		const auto& resource_costs = this->m_techtree.m_technologies.at(type_).get()->m_resources_cost;
 		for (const auto& [resource_type, cost] : resource_costs) {
-			if (this->m_resources.m_resources.at(resource_type)->get_amount() < cost) {
+			if (this->m_resources.m_resources.at(resource_type)->get_amount() < cost) { // goes for the runtime run.
 				return false;
 			}
 		}
 		return true;
 	}
 
-	inline const bool can_be_purshased(const e_technology_type& type_, const uint64_t& current_game_gold_counter_) noexcept {
+	inline const bool can_be_purshased(const e_technology_type& type_, const uint64_t& current_game_gold_counter_) const noexcept {
 		bool cbp_gold = current_game_gold_counter_ >= this->m_techtree.m_technologies.at(type_).get()->m_gold_cost;
 		bool cbp_resources = can_be_resources_purshased(type_);
 		return cbp_gold && cbp_resources;
@@ -112,7 +112,7 @@ private:
 		return true;
 	}
 
-	inline const bool can_be_unlocked(const e_technology_type& type_, const uint64_t& current_game_gold_counter_) noexcept {
-		return dependencies_are_unlocked(type_) && can_be_purshased(type_, current_game_gold_counter_);
+	inline const bool can_be_unlocked(const e_technology_type& type_) noexcept {
+		return dependencies_are_unlocked(type_) && can_be_purshased(type_, this->gold_counter);
 	}
 };
